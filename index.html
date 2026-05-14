@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>B Log | Modern Blog</title>
+  <style>
+    :root {
+      --bg: #f7f4ee;
+      --surface: #fffdf8;
+      --ink: #1d1b16;
+      --muted: #6f6a60;
+      --line: #ded6c8;
+      --brand: #0f766e;
+      --brand-dark: #115e59;
+      --accent: #d97706;
+      --soft: #e8f3f0;
+      --shadow: 0 18px 50px rgba(29, 27, 22, 0.12);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.55;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input, textarea, select {
+      font: inherit;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(255, 253, 248, 0.94);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(12px);
+    }
+
+    .nav {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 1.35rem;
+      letter-spacing: 0;
+    }
+
+    .logo-mark {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      color: white;
+      background: var(--brand);
+      border-radius: 8px;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 6px;
+    }
+
+    .nav-links button,
+    .tag-btn,
+    .action-btn {
+      border: 1px solid transparent;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--muted);
+      padding: 9px 11px;
+      cursor: pointer;
+    }
+
+    .nav-links button.active,
+    .nav-links button:hover,
+    .tag-btn.active,
+    .tag-btn:hover {
+      color: var(--brand-dark);
+      background: var(--soft);
+      border-color: #b7d7d2;
+    }
+
+    main {
+      min-height: calc(100vh - 70px);
+    }
+
+    .hero {
+      background:
+        linear-gradient(90deg, rgba(15, 118, 110, 0.90), rgba(24, 24, 20, 0.62)),
+        url("https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=1800&q=80") center/cover;
+      color: white;
+    }
+
+    .hero-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 86px 20px 72px;
+    }
+
+    .hero h1 {
+      max-width: 760px;
+      margin: 0 0 16px;
+      font-size: clamp(2.3rem, 6vw, 5rem);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 640px;
+      margin: 0 0 28px;
+      color: rgba(255, 255, 255, 0.88);
+      font-size: 1.1rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .primary-btn,
+    .secondary-btn {
+      border: 0;
+      border-radius: 8px;
+      padding: 12px 16px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .primary-btn {
+      background: var(--accent);
+      color: white;
+    }
+
+    .secondary-btn {
+      background: rgba(255, 255, 255, 0.14);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.38);
+    }
+
+    .section {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 38px 20px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .section-title h2 {
+      margin: 0;
+      font-size: clamp(1.5rem, 3vw, 2.35rem);
+    }
+
+    .section-title p {
+      max-width: 560px;
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(29, 27, 22, 0.06);
+    }
+
+    .post-img {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card-body {
+      padding: 18px;
+    }
+
+    .meta {
+      color: var(--brand-dark);
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+
+    .card h3 {
+      margin: 8px 0;
+      font-size: 1.2rem;
+      line-height: 1.25;
+    }
+
+    .card p {
+      margin: 0 0 14px;
+      color: var(--muted);
+    }
+
+    .read-btn {
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--brand-dark);
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .article-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 20px;
+      margin-bottom: 18px;
+    }
+
+    .article-actions a {
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-weight: 700;
+    }
+
+    .article-actions a.disabled {
+      opacity: 0.45;
+      pointer-events: none;
+    }
+
+    .article-actions .prev-link {
+      background: var(--brand);
+      color: white;
+    }
+
+    .article-actions .next-link {
+      background: var(--accent);
+      color: white;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .search {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      border-radius: 8px;
+      padding: 12px 14px;
+      color: var(--ink);
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: 0 8px 24px rgba(29, 27, 22, 0.06);
+    }
+
+    .panel h3 {
+      margin-top: 0;
+    }
+
+    .list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .list-item {
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 12px;
+    }
+
+    .list-item:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .feature-tile {
+      min-height: 136px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .feature-tile:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow);
+    }
+
+    .feature-icon {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      color: white;
+      background: var(--brand);
+      margin-bottom: 12px;
+      font-weight: 800;
+    }
+
+    .feature-tile h3 {
+      margin: 0 0 6px;
+      font-size: 1rem;
+    }
+
+    .feature-tile p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .article {
+      max-width: 860px;
+      margin: 0 auto;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .article-content {
+      padding: 26px;
+    }
+
+    .article h2 {
+      margin: 6px 0 12px;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      line-height: 1.08;
+    }
+
+    .article p {
+      color: #403b33;
+    }
+
+    .form {
+      display: grid;
+      gap: 12px;
+    }
+
+    .form input,
+    .form textarea,
+    .form select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px 14px;
+      background: white;
+    }
+
+    .form textarea {
+      min-height: 150px;
+      resize: vertical;
+    }
+
+    .notice {
+      display: none;
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 8px;
+      background: var(--soft);
+      color: var(--brand-dark);
+      font-weight: 700;
+    }
+
+    .notice.show {
+      display: block;
+    }
+
+    .footer {
+      margin-top: 38px;
+      background: #191712;
+      color: white;
+    }
+
+    .footer-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 28px 20px;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      color: rgba(255, 255, 255, 0.75);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @media (max-width: 900px) {
+      .nav {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .nav-links {
+        justify-content: flex-start;
+      }
+
+      .grid,
+      .two-col,
+      .feature-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .grid,
+      .two-col,
+      .feature-grid,
+      .toolbar {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-inner {
+        padding: 64px 20px 54px;
+      }
+
+      .section-title {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="nav">
+      <a class="logo" href="#home" aria-label="B Log home">
+        <span class="logo-mark">B</span>
+        <span>B Log</span>
+      </a>
+      <div class="nav-links" id="navLinks"></div>
+    </nav>
+  </header>
+
+  <main id="app"></main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <strong>B Log</strong>
+      <span>Modern stories, guides, newsletters, reviews, and community features.</span>
+    </div>
+  </footer>
+
+  <script>
+    const posts = [
+      {
+        id: 1,
+        title: "How to Build a Daily Writing Habit",
+        category: "Writing",
+        author: "Ramya",
+        date: "May 14, 2026",
+        image: "https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1200&q=80",
+        excerpt: "A practical guide to planning ideas, drafting faster, and publishing consistently.",
+        body: "Writing becomes easier when the system is smaller than your motivation. Keep a running idea list, choose one topic before you sit down, and write a rough first version without editing. After that, improve the opening, add examples, and finish with one useful takeaway."
+      },
+      {
+        id: 2,
+        title: "Simple Tech Tools for Bloggers",
+        category: "Tech",
+        author: "Arun",
+        date: "May 12, 2026",
+        image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80",
+        excerpt: "A clean stack for writing, images, analytics, search, and publishing.",
+        body: "A good blog does not need a heavy setup. Use a simple editor, compressed images, readable typography, a fast hosting option, and basic analytics. The best tool is the one that helps you publish without slowing you down."
+      },
+      {
+        id: 3,
+        title: "Travel Notes from a Weekend City Walk",
+        category: "Travel",
+        author: "Meera",
+        date: "May 10, 2026",
+        image: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80",
+        excerpt: "Small observations, local food, quiet streets, and the joy of slow exploring.",
+        body: "The best city walks leave room for surprise. Start early, carry water, avoid rushing from place to place, and notice the small details: signboards, markets, old buildings, and conversations around tea stalls."
+      },
+      {
+        id: 4,
+        title: "Food Stories That Readers Remember",
+        category: "Food",
+        author: "Nisha",
+        date: "May 8, 2026",
+        image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1200&q=80",
+        excerpt: "Make recipes and restaurant reviews feel personal, useful, and vivid.",
+        body: "Food writing works when it combines sensory detail with practical help. Tell readers what changed, what surprised you, how difficult the recipe was, and what you would do differently next time."
+      },
+      {
+        id: 5,
+        title: "A Beginner Guide to Personal Finance",
+        category: "Finance",
+        author: "Dev",
+        date: "May 6, 2026",
+        image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1200&q=80",
+        excerpt: "Budgeting, emergency funds, goals, and simple money habits.",
+        body: "Start with visibility. Track your spending for one month, separate needs from wants, build a small emergency fund, and automate savings where possible. Simple habits create more progress than complicated plans."
+      },
+      {
+        id: 6,
+        title: "Design Tips for Better Blog Pages",
+        category: "Design",
+        author: "Kavin",
+        date: "May 4, 2026",
+        image: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80",
+        excerpt: "Readable spacing, strong hierarchy, clear cards, and better mobile layouts.",
+        body: "A strong blog layout helps readers scan and settle in. Use clear headings, generous line height, high contrast, consistent image sizes, and simple navigation. Good design makes content feel easier to trust."
+      }
+    ];
+
+    const articlePages = {
+      1: [
+        [
+          "A daily writing habit starts before you open the document. Keep a small idea list during the day, then choose one idea before your writing time begins. This removes the biggest delay: deciding what to write while staring at a blank screen.",
+          "Start with a small target. Ten focused minutes is enough for a beginning routine. Write rough sentences first, even if they feel simple. Editing can come later, but the first job is to create material."
+        ],
+        [
+          "Once the draft exists, shape it for the reader. Add a strong opening, divide long thoughts into short sections, and include one clear example. A blog post becomes more useful when readers can imagine how to apply the idea.",
+          "Do not try to make every sentence perfect in the first round. Read the post once for meaning, once for flow, and once for spelling. This simple editing process keeps the work moving."
+        ],
+        [
+          "Publishing regularly is easier when you repeat the same process. Collect ideas, draft quickly, edit calmly, add a title, and publish. Over time, this rhythm trains your mind to treat writing as normal work instead of a special event.",
+          "The best writing habit is one you can continue during busy weeks. Keep it light, honest, and practical."
+        ]
+      ],
+      2: [
+        [
+          "Bloggers need tools that make publishing faster, not heavier. A basic setup can include a text editor, image compressor, browser preview, analytics tool, and backup folder. That is enough for many personal and small business blogs.",
+          "Choose tools that are easy to open and easy to maintain. If the setup takes more energy than the article, it will slowly stop you from publishing."
+        ],
+        [
+          "Images should be clear but not too large. Compress every image before adding it to your blog. This helps the page load faster and gives readers a smoother experience on mobile networks.",
+          "Use simple analytics to learn which topics people read. You do not need to track everything. Page views, popular posts, and search terms are often enough."
+        ]
+      ],
+      3: [
+        [
+          "A weekend city walk is best when it has a loose plan. Pick one starting point, one food stop, and one place to rest. Leave the rest open so the city can surprise you.",
+          "Walk slowly enough to notice details: old signs, side streets, markets, balconies, small temples, street food, and the way people gather in public spaces."
+        ],
+        [
+          "Take notes while the memory is fresh. Write down smells, colors, sounds, and small conversations. These details make a travel article feel alive instead of becoming a list of places.",
+          "Photos help, but words carry the feeling. Describe what changed your mood during the walk."
+        ],
+        [
+          "When you write the final travel post, include useful details too. Mention timing, transport, cost, safety, food options, and what you would skip next time.",
+          "A good travel article gives both emotion and guidance."
+        ]
+      ],
+      4: [
+        [
+          "Food stories become memorable when they connect taste with context. Do not only say the food was good. Explain the texture, spice, smell, temperature, and the moment in which you ate it.",
+          "Readers enjoy food writing when it helps them imagine the plate clearly."
+        ],
+        [
+          "If you are writing a recipe, include practical notes. Mention preparation time, difficulty, substitutions, serving ideas, and mistakes to avoid.",
+          "If you are writing a restaurant review, include service, price, cleanliness, crowd level, and best dishes."
+        ]
+      ],
+      5: [
+        [
+          "Personal finance begins with awareness. Track your spending for one month without judging yourself. The goal is to see where money is going before deciding what to change.",
+          "Divide expenses into needs, wants, savings, and debt payments. This simple view makes decisions easier."
+        ],
+        [
+          "Build an emergency fund slowly. Even a small amount can reduce stress when unexpected expenses appear. Start with one week of basic expenses, then grow from there.",
+          "Automating savings helps because it removes the need to decide every time."
+        ],
+        [
+          "Avoid complicated plans in the beginning. A clear budget, emergency fund, and regular saving habit are more powerful than a perfect spreadsheet you never update.",
+          "Financial progress is built through repeated small choices."
+        ]
+      ],
+      6: [
+        [
+          "A better blog page starts with readability. Use clear headings, comfortable line spacing, and enough contrast between text and background. Readers should not struggle to follow the article.",
+          "Keep paragraphs short on mobile. Long blocks of text feel heavier on small screens."
+        ],
+        [
+          "Images should support the content. Use consistent image sizes so the page feels organized. Avoid random spacing, crowded buttons, and text that touches the edge of the screen.",
+          "Good design is quiet. It helps the article feel trustworthy without asking for attention every second."
+        ]
+      ]
+    };
+
+    const pages = [
+      ["home", "Home"],
+      ["posts", "Posts"],
+      ["categories", "Categories"],
+      ["about", "About"],
+      ["authors", "Authors"],
+      ["newsletter", "Newsletter"],
+      ["contact", "Contact"],
+      ["features", "Features"],
+      ["archive", "Archive"],
+      ["reviews", "Reviews"],
+      ["gallery", "Gallery"],
+      ["resources", "Resources"],
+      ["faq", "FAQ"]
+    ];
+
+    const app = document.getElementById("app");
+    const navLinks = document.getElementById("navLinks");
+
+    function setNav() {
+      navLinks.innerHTML = pages.map(([id, label]) =>
+        `<button data-route="${id}" class="${route() === id ? "active" : ""}">${label}</button>`
+      ).join("");
+    }
+
+    function route() {
+      return location.hash.replace("#", "") || "home";
+    }
+
+    function go(id) {
+      location.hash = id;
+      render();
+    }
+
+    function goArticle(id, page) {
+      location.hash = `article-${id}`;
+      render();
+    }
+
+    function postCard(post) {
+      return `
+        <article class="card">
+          <img class="post-img" src="${post.image}" alt="${post.title}">
+          <div class="card-body">
+            <span class="meta">${post.category} | ${post.date}</span>
+            <h3>${post.title}</h3>
+            <p>${post.excerpt}</p>
+            <button class="read-btn" data-post="${post.id}">Read article</button>
+          </div>
+        </article>
+      `;
+    }
+
+    function homePage() {
+      app.innerHTML = `
+        <section class="hero">
+          <div class="hero-inner">
+            <h1>B Log</h1>
+            <p>A complete modern blog with articles, categories, authors, newsletter, reviews, gallery, resources, archive, FAQ, and contact pages.</p>
+            <div class="hero-actions">
+              <button class="primary-btn" data-route="posts">Explore Posts</button>
+              <button class="secondary-btn" data-route="features">View Features</button>
+            </div>
+          </div>
+        </section>
+        <section class="section">
+          <div class="section-title">
+            <h2>Latest Posts</h2>
+            <p>Fresh stories and practical guides from the B Log editorial desk.</p>
+          </div>
+          <div class="grid">${posts.slice(0, 3).map(postCard).join("")}</div>
+        </section>
+      `;
+    }
+
+    function postsPage() {
+      app.innerHTML = `
+        <section class="section">
+          <div class="section-title">
+            <h2>All Posts</h2>
+            <p>Search posts by title, category, author, or description.</p>
+          </div>
+          <div class="toolbar">
+            <input class="search" id="searchInput" placeholder="Search posts..." />
+            <select class="search" id="sortInput">
+              <option value="new">Newest first</option>
+              <option value="title">Title A-Z</option>
+            </select>
+          </div>
+          <div class="grid" id="postGrid"></div>
+        </section>
+      `;
+      const searchInput = document.getElementById("searchInput");
+      const sortInput = document.getElementById("sortInput");
+      const postGrid = document.getElementById("postGrid");
+
+      function renderPosts() {
+        const q = searchInput.value.toLowerCase();
+        let list = posts.filter(post =>
+          `${post.title} ${post.category} ${post.author} ${post.excerpt}`.toLowerCase().includes(q)
+        );
+        if (sortInput.value === "title") {
+          list = list.sort((a, b) => a.title.localeCompare(b.title));
+        }
+        postGrid.innerHTML = list.length ? list.map(postCard).join("") : `<p>No posts found.</p>`;
+      }
+
+      searchInput.addEventListener("input", renderPosts);
+      sortInput.addEventListener("change", renderPosts);
+      renderPosts();
+    }
+
+    function categoriesPage() {
+      const categories = [...new Set(posts.map(post => post.category))];
+      app.innerHTML = `
+        <section class="section">
+          <div class="section-title">
+            <h2>Categories</h2>
+            <p>Filter the blog by topic.</p>
+          </div>
+          <div class="filters">
+            <button class="tag-btn active" data-category="All">All</button>
+            ${categories.map(category => `<button class="tag-btn" data-category="${category}">${category}</button>`).join("")}
+          </div>
+          <div class="grid" id="categoryGrid">${posts.map(postCard).join("")}</div>
+        </section>
+      `;
+      document.querySelectorAll("[data-category]").forEach(button => {
+        button.addEventListener("click", () => {
+          document.querySelectorAll("[data-category]").forEach(btn => btn.classList.remove("active"));
+          button.classList.add("active");
+          const category = button.dataset.category;
+          const filtered = category === "All" ? posts : posts.filter(post => post.category === category);
+          document.getElementById("categoryGrid").innerHTML = filtered.map(postCard).join("");
+        });
+      });
+    }
+
+    function aboutPage() {
+      app.innerHTML = `
+        <section class="section two-col">
+          <div class="panel">
+            <h2>About B Log</h2>
+            <p>B Log is a clean, responsive blog project made for publishing stories, tutorials, updates, reviews, and resources. It works as a single HTML file, so you can open it directly or run it with a local server.</p>
+            <p>The design includes working navigation, article pages, search, category filters, forms, and more than 10 feature pages.</p>
+          </div>
+          <div class="panel">
+            <h3>Highlights</h3>
+            <div class="list">
+              <div class="list-item">Responsive layout for mobile and desktop.</div>
+              <div class="list-item">Single page navigation using browser hash links.</div>
+              <div class="list-item">No installation required.</div>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function authorsPage() {
+      const authors = [...new Set(posts.map(post => post.author))];
+      app.innerHTML = `
+        <section class="section">
+          <div class="section-title">
+            <h2>Authors</h2>
+            <p>Meet the writers behind the posts.</p>
+          </div>
+          <div class="grid">
+            ${authors.map(author => {
+              const count = posts.filter(post => post.author === author).length;
+              return `<div class="card"><div class="card-body"><span class="meta">${count} post${count > 1 ? "s" : ""}</span><h3>${author}</h3><p>Contributor at B Log, writing clear and useful articles for readers.</p></div></div>`;
+            }).join("")}
+          </div>
+        </section>
+      `;
+    }
+
+    function newsletterPage() {
+      app.innerHTML = `
+        <section class="section two-col">
+          <div class="panel">
+            <h2>Newsletter</h2>
+            <p>Subscribe for weekly articles, featured posts, and useful resources.</p>
+            <form class="form" data-form="newsletter">
+              <input required placeholder="Your name">
+              <input required type="email" placeholder="Email address">
+              <select>
+                <option>Weekly digest</option>
+                <option>New post alerts</option>
+                <option>Monthly roundup</option>
+              </select>
+              <button class="primary-btn">Subscribe</button>
+            </form>
+            <div class="notice" id="newsletterNotice">Subscribed successfully.</div>
+          </div>
+          <div class="panel">
+            <h3>What You Get</h3>
+            <div class="list">
+              <div class="list-item">Best posts selected every week.</div>
+              <div class="list-item">Simple writing and blogging tips.</div>
+              <div class="list-item">No spam, only useful updates.</div>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function contactPage() {
+      app.innerHTML = `
+        <section class="section two-col">
+          <div class="panel">
+            <h2>Contact</h2>
+            <p>Send a message to the B Log team.</p>
+            <form class="form" data-form="contact">
+              <input required placeholder="Name">
+              <input required type="email" placeholder="Email">
+              <textarea required placeholder="Message"></textarea>
+              <button class="primary-btn">Send Message</button>
+            </form>
+            <div class="notice" id="contactNotice">Message sent successfully.</div>
+          </div>
+          <div class="panel">
+            <h3>Details</h3>
+            <p>Email: hello@blog.example</p>
+            <p>Location: India</p>
+            <p>Response time: 1-2 business days</p>
+          </div>
+        </section>
+      `;
+    }
+
+    function featuresPage() {
+      const features = [
+        ["01", "Home Page", "Hero, latest posts, and quick actions."],
+        ["02", "Post Listing", "Search and sort all blog posts."],
+        ["03", "Article View", "Each post opens in a full article page."],
+        ["04", "Categories", "Filter posts by topic."],
+        ["05", "Authors", "Author cards with contribution counts."],
+        ["06", "Newsletter", "Working subscribe form feedback."],
+        ["07", "Contact", "Working contact form feedback."],
+        ["08", "Archive", "Posts grouped by month."],
+        ["09", "Reviews", "Rating style review section."],
+        ["10", "Gallery", "Responsive image gallery."],
+        ["11", "Resources", "Useful downloadable-style resource list."],
+        ["12", "FAQ", "Expandable question and answer section."]
+      ];
+      app.innerHTML = `
+        <section class="section">
+          <div class="section-title">
+            <h2>Features</h2>
+            <p>More than 10 working pages and feature sections are included.</p>
+          </div>
+          <div class="feature-grid">
+            ${features.map(item => `
+              <div class="feature-tile">
+                <div class="feature-icon">${item[0]}</div>
+                <h3>${item[1]}</h3>
+                <p>${item[2]}</p>
+              </div>
+            `).join("")}
+          </div>
+        </section>
+      `;
+    }
+
+    function archivePage() {
+      app.innerHTML = `
+        <section class="section">
+          <div class="section-title">
+            <h2>Archive</h2>
+            <p>Browse posts by date.</p>
+          </div>
+          <div class="panel list">
+            ${posts.map(post => `
+              <div class="list-item">
+                <span class="meta">${post.date} | ${post.category}</span>
+                <h3>${post.title}</h3>
+                <button class="read-btn" data-post="${post.id}">Open article</button>
+              </div>
+            `).join("")}
+          </div>
+        </section>
+      `;
+    }
+
+    function reviewsPage() {
+      const reviews = [
+        ["Reader Experience", "★★★★★", "Clean layout and easy navigation."],
+        ["Mobile Design", "★★★★★", "Works nicely on small screens."],
+        ["Content Structure", "★★★★☆", "Strong categories, archive, and article pages."]
+      ];
+      app.innerHTML = `
+        <section class="section">
+          <div class="section-title">
+            <h2>Reviews</h2>
+            <p>Feedback style cards for the blog.</p>
+          </div>
+          <div class="grid">
+            ${reviews.map(review => `
+              <div class="card"><div class="card-body"><span class="meta">${review[1]}</span><h3>${review[0]}</h3><p>${review[2]}</p></div></div>
+            `).join("")}
+          </div>
+        </section>
+      `;
+    }
+
+    function galleryPage() {
+      app.innerHTML = `
+        <section class="section">
+          <div class="section-title">
+            <h2>Gallery</h2>
+            <p>Image collection for travel, work, food, design, and writing stories.</p>
+          </div>
+          <div class="grid">
+            ${posts.map(post => `<img class="post-img card" src="${post.image}" alt="${post.category}">`).join("")}
+          </div>
+        </section>
+      `;
+    }
+
+    function resourcesPage() {
+      const resources = ["Blog post checklist", "SEO title planner", "Content calendar", "Image compression guide", "Newsletter template"];
+      app.innerHTML = `
+        <section class="section two-col">
+          <div class="panel">
+            <h2>Resources</h2>
+            <p>Helpful tools and templates for running a better blog.</p>
+            <div class="list">
+              ${resources.map(item => `<div class="list-item"><strong>${item}</strong><p>Open this resource to plan, write, edit, and publish faster.</p></div>`).join("")}
+            </div>
+          </div>
+          <div class="panel">
+            <h3>Quick Tip</h3>
+            <p>Before publishing, check title, introduction, image size, readability, category, and mobile preview.</p>
+          </div>
+        </section>
+      `;
+    }
+
+    function faqPage() {
+      const faqs = [
+        ["Does this need internet?", "The page opens offline, but online images need internet to load."],
+        ["Can I add more posts?", "Yes. Add new objects to the posts list in the script."],
+        ["Does search work?", "Yes. Search checks title, author, category, and excerpt."],
+        ["Can I run it with Command Prompt?", "Yes. Use start index.html or py -m http.server 8000."]
+      ];
+      app.innerHTML = `
+        <section class="section">
+          <div class="section-title">
+            <h2>FAQ</h2>
+            <p>Common questions about this blog project.</p>
+          </div>
+          <div class="panel">
+            ${faqs.map((faq, index) => `
+              <details class="list-item" ${index === 0 ? "open" : ""}>
+                <summary><strong>${faq[0]}</strong></summary>
+                <p>${faq[1]}</p>
+              </details>
+            `).join("")}
+          </div>
+        </section>
+      `;
+    }
+
+    function articlePage(id) {
+      const post = posts.find(item => item.id === Number(id)) || posts[0];
+      const pages = articlePages[post.id] || [[post.body]];
+      const paragraphs = pages.flat();
+      app.innerHTML = `
+        <section class="section">
+          <article class="article">
+            <img class="post-img" src="${post.image}" alt="${post.title}">
+            <div class="article-content">
+              <span class="meta">${post.category} | ${post.author} | ${post.date}</span>
+              <h2>${post.title}</h2>
+              ${paragraphs.map(paragraph => `<p>${paragraph}</p>`).join("")}
+              <button class="primary-btn" onclick="go('posts')">Back to Posts</button>
+            </div>
+          </article>
+        </section>
+      `;
+    }
+
+    document.addEventListener("click", event => {
+      const routeButton = event.target.closest("[data-route]");
+      if (routeButton) {
+        go(routeButton.dataset.route);
+      }
+
+      const postButton = event.target.closest("[data-post]");
+      if (postButton) {
+        goArticle(postButton.dataset.post);
+      }
+    });
+
+    function bindCommonEvents() {
+      document.querySelectorAll("[data-form]").forEach(form => {
+        if (form.dataset.bound === "true") return;
+        form.dataset.bound = "true";
+        form.addEventListener("submit", event => {
+          event.preventDefault();
+          const noticeId = `${form.dataset.form}Notice`;
+          const notice = document.getElementById(noticeId);
+          if (notice) notice.classList.add("show");
+          form.reset();
+        });
+      });
+    }
+
+    function render() {
+      const current = route();
+      setNav();
+
+      if (current.startsWith("article-")) {
+        const articleParts = current.replace("article-", "").split("-");
+        articlePage(articleParts[0]);
+      } else if (current === "home") homePage();
+      else if (current === "posts") postsPage();
+      else if (current === "categories") categoriesPage();
+      else if (current === "about") aboutPage();
+      else if (current === "authors") authorsPage();
+      else if (current === "newsletter") newsletterPage();
+      else if (current === "contact") contactPage();
+      else if (current === "features") featuresPage();
+      else if (current === "archive") archivePage();
+      else if (current === "reviews") reviewsPage();
+      else if (current === "gallery") galleryPage();
+      else if (current === "resources") resourcesPage();
+      else if (current === "faq") faqPage();
+      else homePage();
+
+      bindCommonEvents();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    window.addEventListener("hashchange", render);
+    render();
+  </script>
+</body>
+</html>
