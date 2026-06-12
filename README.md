@@ -573,3 +573,5 @@ Before pushing, make sure real `.env` secrets are not uploaded.
 ## Project Outcome
 
 After completing this project, you will understand how to build a full-stack content management platform with user authentication, posts, comments, frontend routing, backend APIs, and database integration.
+update
+kusuruakshitha
